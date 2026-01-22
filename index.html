@@ -26,6 +26,10 @@
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
+    <!-- Fallback if JS is disabled -->
+    <noscript>
+        <meta http-equiv="refresh" content="5;url=https://zoom.us/j/98913147891?pwd=dHhvWE92c0VIQ1hobVJpRS8zQVdlQT09">
+    </noscript>
 <script type="importmap">
 {
   "imports": {
@@ -63,6 +67,11 @@
                     Klicka här om du behöver hjälp
                 </span>
             </button>
+
+            <!-- Manual Fallback Link (Always visible in case JS fails) -->
+            <a id="direct-link" href="https://zoom.us/j/98913147891?pwd=dHhvWE92c0VIQ1hobVJpRS8zQVdlQT09" class="mt-8 text-xs text-brand-600/60 hover:text-brand-600 underline">
+                Om du inte omdirigeras automatiskt, klicka här
+            </a>
         </div>
 
         <!-- Vy 2: Hjälp (Dold som standard) -->
