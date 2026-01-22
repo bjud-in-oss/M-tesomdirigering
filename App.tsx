@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { MEETING_CONFIG, TEXTS } from './constants';
 import { ProgressBar } from './components/ProgressBar';
 import { HelpCard } from './components/HelpCard';
-import { Loader2, HelpCircle, ExternalLink } from 'lucide-react';
+import { Loader2, HelpCircle } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState(MEETING_CONFIG.redirectDelaySeconds * 100); // Using 100ms intervals for smoother bar
+  const [timeLeft, setTimeLeft] = useState(MEETING_CONFIG.redirectDelaySeconds * 100); 
   const [isPaused, setIsPaused] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -14,7 +14,6 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // If help is shown or paused, do not tick down
     if (showHelp || isPaused) return;
 
     if (timeLeft <= 0) {
@@ -23,7 +22,7 @@ const App: React.FC = () => {
     }
 
     const interval = setInterval(() => {
-      setTimeLeft((prev) => Math.max(0, prev - 10)); // Decrease by 10 (100ms)
+      setTimeLeft((prev) => Math.max(0, prev - 10)); // Tick every 100ms
     }, 100);
 
     return () => clearInterval(interval);
@@ -34,81 +33,51 @@ const App: React.FC = () => {
     setShowHelp(true);
   };
 
-  const handleCloseHelp = () => {
+  const handleBack = () => {
     setShowHelp(false);
     setIsPaused(false);
-    // Reset timer partially to give user a moment upon return, or let it continue
-    setTimeLeft(300); // Give them 3 seconds before auto-redirect resumes
+    // Optional: Reset timer a bit so they don't immediately jump away upon return
+    setTimeLeft(300); 
   };
 
   const progressPercentage = 100 - ((timeLeft / (MEETING_CONFIG.redirectDelaySeconds * 100)) * 100);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      
-      {/* Decorative background elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 z-0 pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-100 rounded-full blur-3xl opacity-50 z-0 pointer-events-none"></div>
-
-      <div className="z-10 w-full flex justify-center">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white ring-1 ring-brand-100">
+        
         {showHelp ? (
-          <HelpCard onClose={handleCloseHelp} onJoinNow={performRedirect} />
+          <HelpCard onBack={handleBack} onJoinNow={performRedirect} />
         ) : (
-          <div className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-slate-100 w-full max-w-lg text-center animate-fade-in">
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 bg-brand-100 rounded-full animate-ping opacity-75"></div>
-                <div className="relative bg-white p-4 rounded-full shadow-sm border border-slate-100">
-                  <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
-                </div>
+          <div className="text-center animate-fade-in">
+            <div className="flex justify-center mb-6">
+              <div className="bg-brand-50 p-4 rounded-full">
+                <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
               </div>
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+            <h1 className="text-2xl font-bold text-brand-800 mb-2">
               {TEXTS.title}
             </h1>
             
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+            <p className="text-slate-600 mb-8 font-medium">
               {TEXTS.subtitle}
             </p>
 
             <ProgressBar progress={progressPercentage} />
 
-            <div className="flex flex-col gap-4 mt-8">
-              <button 
-                onClick={performRedirect}
-                className="w-full flex items-center justify-center gap-2 text-brand-600 font-medium py-2 px-4 rounded-lg hover:bg-brand-50 transition-colors"
-              >
-                <ExternalLink size={18} />
-                <span>Öppna omedelbart</span>
-              </button>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-slate-400">eller</span>
-                </div>
-              </div>
-
-              <button
-                onClick={handleHelpClick}
-                className="group flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 transition-colors mt-2 text-sm md:text-base"
-              >
-                <HelpCircle size={18} className="group-hover:text-brand-600 transition-colors" />
-                <span className="underline decoration-slate-300 underline-offset-4 group-hover:decoration-brand-600 transition-all">
-                  {TEXTS.helpTrigger}
-                </span>
-              </button>
-            </div>
+            <button
+              onClick={handleHelpClick}
+              className="mt-8 group flex items-center justify-center gap-2 w-full text-slate-400 hover:text-brand-600 transition-colors text-sm"
+            >
+              <HelpCircle size={16} />
+              <span className="underline decoration-transparent group-hover:decoration-brand-600 underline-offset-4 transition-all">
+                {TEXTS.helpTrigger}
+              </span>
+            </button>
           </div>
         )}
       </div>
-
-      <footer className="absolute bottom-6 text-center text-slate-400 text-sm">
-        Säker omdirigering till Zoom
-      </footer>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ansluter till mötet...</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -10,16 +10,11 @@
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
             colors: {
               brand: {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                500: '#0ea5e9',
-                600: '#0284c7',
-                700: '#0369a1',
+                50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 
+                600: '#0d9488', 700: '#0f766e', 800: '#115e59'
               }
             }
           }
@@ -27,22 +22,83 @@
       }
     </script>
     <style>
-      body {
-        background-color: #f8fafc;
-      }
+        body { background-color: #f0fdfa; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react": "https://esm.sh/react@^19.2.3",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
   }
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body class="min-h-screen flex items-center justify-center p-4 text-slate-800">
+
+    <div class="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white ring-1 ring-brand-100 p-8 overflow-hidden relative">
+        
+        <!-- Vy 1: Omdirigering (Startläge) -->
+        <div id="redirect-view" class="flex flex-col items-center text-center fade-in">
+            <div class="mb-6 p-4 bg-brand-50 rounded-full">
+                <svg class="animate-spin h-8 w-8 text-brand-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+
+            <h1 class="text-2xl font-bold text-brand-800 mb-2">Ett ögonblick...</h1>
+            <p class="text-slate-600 mb-8 font-medium">Du vidarebefordras nu till hjälpföreningens möte</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-brand-100 rounded-full h-2 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-brand-600 h-2 rounded-full transition-all duration-100 ease-linear" style="width: 0%"></div>
+            </div>
+
+            <button id="help-btn" class="text-slate-400 hover:text-brand-600 text-sm flex items-center gap-2 group transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                <span class="underline decoration-transparent group-hover:decoration-brand-600 underline-offset-4 transition-all">
+                    Klicka här om du behöver hjälp
+                </span>
+            </button>
+        </div>
+
+        <!-- Vy 2: Hjälp (Dold som standard) -->
+        <div id="help-view" class="hidden flex-col fade-in">
+            <h2 class="text-2xl font-bold text-brand-800 mb-2 text-center">Behöver du hjälp?</h2>
+            <p class="text-slate-600 text-center mb-6">Om omdirigeringen inte fungerade kan du ansluta manuellt.</p>
+
+            <div class="bg-slate-50 border border-brand-100 rounded-xl p-5 mb-6">
+                <h3 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Instruktioner</h3>
+                <ol class="list-decimal list-inside space-y-3 text-slate-600 text-sm">
+                    <li>Öppna <strong>Zoom</strong>-appen.</li>
+                    <li>Välj "Join Meeting".</li>
+                    <li class="pb-1">
+                        Om du blir tillfrågad om lösenkod, ange:
+                        <div class="mt-2 text-center bg-white border border-brand-200 rounded py-2 font-mono text-xl font-bold text-brand-700 select-all">
+                            0
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button id="manual-join-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    Gå till mötet manuellt
+                </button>
+                <button id="back-btn" class="w-full text-slate-500 hover:text-brand-600 font-medium py-2 px-4 transition-colors text-sm flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Tillbaka
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Logic Script -->
+    <script src="./script.js"></script>
+</body>
 </html>

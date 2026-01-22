@@ -1,78 +1,52 @@
 import React from 'react';
 import { MEETING_CONFIG, TEXTS } from '../constants';
-import { Copy, Video, Smartphone } from 'lucide-react';
+import { Video, ArrowLeft } from 'lucide-react';
 
 interface HelpCardProps {
-  onClose: () => void;
+  onBack: () => void;
   onJoinNow: () => void;
 }
 
-export const HelpCard: React.FC<HelpCardProps> = ({ onClose, onJoinNow }) => {
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // In a full app, we would show a toast here
-  };
-
+export const HelpCard: React.FC<HelpCardProps> = ({ onBack, onJoinNow }) => {
   return (
-    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100 w-full max-w-lg mx-4 animate-fade-in">
-      <div className="flex items-center justify-center mb-6">
-        <div className="p-3 bg-amber-50 rounded-full text-amber-600">
-          <Smartphone size={32} />
-        </div>
-      </div>
-      
-      <h2 className="text-2xl font-bold text-center text-slate-800 mb-2">
-        {TEXTS.manualLoginTitle}
+    <div className="w-full animate-fade-in">
+      <h2 className="text-2xl font-semibold text-brand-800 mb-2 text-center">
+        {TEXTS.helpTitle}
       </h2>
       
-      <p className="text-slate-600 text-center mb-6">
-        {TEXTS.manualLoginDesc}
+      <p className="text-slate-600 text-center mb-8">
+        {TEXTS.helpDesc}
       </p>
 
-      <div className="space-y-4 mb-8">
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Mötes-ID (Meeting ID)</p>
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-mono font-medium text-slate-900">{MEETING_CONFIG.meetingId}</span>
-            <button 
-              onClick={() => copyToClipboard(MEETING_CONFIG.meetingId.replace(/\s/g, ''))}
-              className="text-brand-600 hover:text-brand-700 p-2 hover:bg-brand-50 rounded-md transition-colors"
-              title="Kopiera ID"
-            >
-              <Copy size={18} />
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Lösenkod (Passcode)</p>
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-mono font-medium text-slate-900">{MEETING_CONFIG.passcode}</span>
-            <button 
-               onClick={() => copyToClipboard(MEETING_CONFIG.passcode)}
-               className="text-brand-600 hover:text-brand-700 p-2 hover:bg-brand-50 rounded-md transition-colors"
-               title="Kopiera kod"
-            >
-              <Copy size={18} />
-            </button>
-          </div>
-        </div>
+      <div className="bg-white border border-brand-100 rounded-xl p-6 mb-8 shadow-sm">
+        <h3 className="font-semibold text-slate-700 mb-4">Gör så här:</h3>
+        <ol className="list-decimal list-inside space-y-3 text-slate-600 text-sm md:text-base">
+          <li>Öppna <strong>Zoom</strong>-appen på din enhet.</li>
+          <li>Välj "Join Meeting".</li>
+          <li>
+            Om du blir tillfrågad om lösenkod, skriv:
+            <div className="mt-2 inline-block bg-brand-50 text-brand-700 font-mono font-bold text-xl px-4 py-1 rounded border border-brand-200">
+              {MEETING_CONFIG.passcode}
+            </div>
+          </li>
+        </ol>
       </div>
 
       <div className="flex flex-col gap-3">
         <button
           onClick={onJoinNow}
-          className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg transform active:scale-[0.98]"
+          className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm"
         >
           <Video size={20} />
-          {TEXTS.joinButton}
+          {TEXTS.manualJoinButton}
         </button>
         
         <button
-          onClick={onClose}
-          className="w-full py-3 px-4 text-slate-500 hover:text-slate-700 font-medium transition-colors text-sm"
+          onClick={onBack}
+          className="w-full flex items-center justify-center gap-2 text-slate-500 hover:text-brand-600 font-medium py-2 px-4 transition-colors text-sm"
         >
-          {TEXTS.cancelHelp}
+          <ArrowLeft size={16} />
+          {TEXTS.backButton}
         </button>
       </div>
     </div>
